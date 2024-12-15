@@ -1,0 +1,14 @@
+num_nodes=9
+node_dim=6
+data_layer = tf.keras.layers.Input(shape=(num_nodes, node_dim))
+edge_layer = tf.keras.layers.Input(shape=(num_nodes, num_nodes))
+conv_layer = GraphConv(units=300, step_num=3,)([data_layer, edge_layer])
+#conv_layer1 = GraphConv(units=500, step_num=3,)([data_layer, edge_layer])
+
+conv_layer2 = GraphConv(units=1, step_num=3,)([conv_layer, edge_layer])
+out1 = tf.squeeze(conv_layer2, 2)
+out2 = tf.keras.layers.Dense(50, 'tanh')(out1)
+#out2 = tf.keras.layers.Dense(50, 'tanh')(out2)
+out = tf.keras.layers.Dense(2, 'softmax')(out2)
+model = tf.keras.Model([data_layer, edge_layer], out)
+model.summary()
